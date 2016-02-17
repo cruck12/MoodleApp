@@ -12,5 +12,11 @@
     tools:context="com.sahil.moodleapp.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    //The frame that is replaced when onCreate is called.
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/Starting_Frame"></FrameLayout>
+
 
 </RelativeLayout>
