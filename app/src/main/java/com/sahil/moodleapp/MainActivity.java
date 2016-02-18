@@ -2,7 +2,9 @@ package com.sahil.moodleapp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -17,6 +19,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -42,6 +46,22 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        //Filling in the profile details
+        SharedPreferences settings = getApplication().getSharedPreferences("profileData", MODE_PRIVATE);
+        final TextView firstName =(TextView) findViewById(R.id.profile_firstName);
+        final TextView lastName =(TextView) findViewById(R.id.profile_lastName);
+        final TextView email =(TextView) findViewById(R.id.profile_email);
+        final TextView username =(TextView) findViewById(R.id.profile_username);
+        final TextView entryNo =(TextView) findViewById(R.id.profile_entryNo);
+        final TextView type =(TextView) findViewById(R.id.profile_type);
+        firstName.setText(firstName.getText()+"\t:\t"+settings.getString("firstName",""));
+        lastName.setText(lastName.getText()+"\t:\t"+settings.getString("lastName",""));
+        email.setText(email.getText()+"\t:\t"+settings.getString("email",""));
+        username.setText(username.getText()+"\t:\t"+settings.getString("username",""));
+        entryNo.setText(entryNo.getText()+"\t:\t"+settings.getString("entryNo",""));
+        type.setText(type.getText()+"\t:\t"+settings.getString("type",""));
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

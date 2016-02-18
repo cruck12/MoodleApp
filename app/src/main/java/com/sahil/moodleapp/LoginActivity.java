@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.NetworkInfo;
@@ -123,7 +124,19 @@ public class LoginActivity extends AppCompatActivity {
                     boolean success = response.getBoolean("success");
                     JSONObject user = response.getJSONObject("user");
                     Toast.makeText(getApplicationContext(),gateway+response.getBoolean("success")+user.getString("username"), Toast.LENGTH_SHORT).show();
-                    if(success){
+                    if(success)
+                    {
+                        //Data received from JSON response. This data is further needed in other activity, hence is shared.
+                        SharedPreferences settings = getApplicationContext().getSharedPreferences("profileData",MODE_PRIVATE);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString("firstName",user.getString("first_name"));
+                        editor.putString("lastName",user.getString("last_name"));
+                        editor.putString("email",user.getString("email"));
+                        editor.putString("username",user.getString("username"));
+                        editor.putString("entryNo",user.getString("entry_no"));
+                        editor.putString("type",user.getString("type"));
+                        editor.commit();
+
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                     }
