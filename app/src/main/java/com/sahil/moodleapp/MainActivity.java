@@ -2,6 +2,9 @@ package com.sahil.moodleapp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.net.DhcpInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,6 +17,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -24,15 +36,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
     }
 
+    final String BackStack= "back";
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -86,27 +90,56 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment;
         FragmentManager fragmentManager = getFragmentManager();
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_courses) {
             fragment = new Courses_Fragment();
-            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).commit();
-        } else if (id == R.id.nav_gallery) {
+            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
+        } else if (id == R.id.nav_grades) {
             fragment = new Grades_Fragment();
-            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).commit();
-        } else if (id == R.id.nav_slideshow) {
+            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
+        } else if (id == R.id.nav_assignments) {
             fragment = new Assignments_Fragment();
-            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).commit();
-        } else if (id == R.id.nav_manage) {
+            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
+        } else if (id == R.id.nav_notifications) {
             fragment = new Notifications_Fragment();
-            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).commit();
-        } else if (id == R.id.nav_share) {
+            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
+        } else if (id == R.id.nav_profile) {
             fragment = new Profile_Fragment();
-            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).commit();
-        } else if (id == R.id.nav_send) {
+            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
+        } else if (id == R.id.nav_logout) {
+            logoutUser();
+    }
 
-        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void logoutUser(){
+        final WifiManager manager = (WifiManager) super.getSystemService(WIFI_SERVICE);
+        final DhcpInfo dhcp = manager.getDhcpInfo();
+        String gateway = LoginActivity.intToIp(dhcp.gateway);
+        String URL = "http://"+gateway +":8000";
+        JsonObjectRequest request = new JsonObjectRequest(URL + "/default/logout.json",null
+                ,new Response.Listener<JSONObject>(){
+            @Override
+            //Parse LOGIN
+            public void onResponse(JSONObject response){
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        }
+                ,new Response.ErrorListener() {
+            @Override
+            //Handle Errors
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(getApplicationContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        request.setTag("logoutRequest");
+        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
+        RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
+        mqueue.add(request);
     }
 }
