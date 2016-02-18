@@ -5,17 +5,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.DhcpInfo;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.Formatter;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,10 +31,14 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+
 public class LoginActivity extends AppCompatActivity {
 
     boolean loginState = false;
-    final String URL = "http://103.27.8.44:8000/";
+//    final String URL = "http://103.27.8.44:8000";
+    String URL;
     RequestQueue mqueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +46,14 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //default implementation of handling cookies
+        CookieManager cookieManager= new CookieManager();
+        CookieHandler.setDefault(cookieManager);
+
         //initialize request queues
-        mqueue= Volley.newRequestQueue(this.getApplicationContext());
+        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
+        mqueue= moodleAppApplication.getmRequestQueue();
     }
 
     @Override
@@ -64,6 +78,14 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //method to convert an IP address in int form to the general string form we all love
+    //done via bitshifting multiples of 8
+    public static String intToIp(int addr) {
+        return  ((addr & 0xFF) + "." +
+                ((addr >>>= 8) & 0xFF) + "." +
+                ((addr >>>= 8) & 0xFF) + "." +
+                ((addr >>>= 8) & 0xFF));
+    }
 
     //Login according to given userid & pass
     public void loginUser(View view){
@@ -75,11 +97,15 @@ public class LoginActivity extends AppCompatActivity {
             NetworkInfo network = cm.getActiveNetworkInfo();
             boolean isConnected = network != null && network.isConnectedOrConnecting();
             if (isConnected) {
+                final WifiManager manager = (WifiManager) super.getSystemService(WIFI_SERVICE);
+                final DhcpInfo dhcp = manager.getDhcpInfo();
+                String gateway = intToIp(dhcp.gateway);
+                URL = "http://"+gateway +":8000";
                 final EditText editText_username =(EditText) findViewById(R.id.editText_Username);
                 final EditText editText_password =(EditText) findViewById(R.id.editText_Password);
                 String username = editText_username.getText().toString();
                 String password = editText_password.getText().toString();
-                login(username,password);
+                login(username,password,gateway);
             } else {
                 DialogFragment showInternet = new showInternetDialogFragment();
                 showInternet.show(getFragmentManager(),"showInternet");
@@ -87,21 +113,23 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void login(String username, String password) {
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,URL + "/default/login.json?userid="+username+"&password="+password,null
+    private void login(String username, String password, final String gateway) {
+        JsonObjectRequest request = new JsonObjectRequest(URL + "/default/login.json?userid="+username+"&password="+password,null
                 ,new Response.Listener<JSONObject>(){
             @Override
             //Parse LOGIN
             public void onResponse(JSONObject response){
                 try {
                     boolean success = response.getBoolean("success");
+                    JSONObject user = response.getJSONObject("user");
+                    Toast.makeText(getApplicationContext(),gateway+response.getBoolean("success")+user.getString("username"), Toast.LENGTH_SHORT).show();
                     if(success){
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                     }
                 }
                 catch (JSONException e){
-
+//                    Toast.makeText(getApplicationContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -109,9 +137,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             //Handle Errors
             public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(getApplicationContext(),gateway+volleyError.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
+        request.setTag("loginRequest");
 
         mqueue.add(request);
 
