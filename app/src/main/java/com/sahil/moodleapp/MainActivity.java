@@ -9,6 +9,7 @@ import android.net.DhcpInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -32,6 +33,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, Courses_Fragment.OnFragmentInteractionListener,
         Grades_Fragment.OnFragmentInteractionListener,
@@ -52,24 +56,14 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        //Filling in the profile details
-        SharedPreferences settings = getApplication().getSharedPreferences("profileData", MODE_PRIVATE);
-        final TextView firstName =(TextView) findViewById(R.id.profile_firstName);
-        final TextView lastName =(TextView) findViewById(R.id.profile_lastName);
-        final TextView email =(TextView) findViewById(R.id.profile_email);
-        final TextView username =(TextView) findViewById(R.id.profile_username);
-        final TextView entryNo =(TextView) findViewById(R.id.profile_entryNo);
-        final TextView type =(TextView) findViewById(R.id.profile_type);
-        firstName.setText(firstName.getText()+"\t:\t"+settings.getString("firstName",""));
-        lastName.setText(lastName.getText()+"\t:\t"+settings.getString("lastName",""));
-        email.setText(email.getText()+"\t:\t"+settings.getString("email",""));
-        username.setText(username.getText()+"\t:\t"+settings.getString("username",""));
-        entryNo.setText(entryNo.getText()+"\t:\t"+settings.getString("entryNo",""));
-        type.setText(type.getText()+"\t:\t"+settings.getString("type",""));
+        //default implementation of handling cookies
+        CookieManager cookieManager= new CookieManager();
+        CookieHandler.setDefault(cookieManager);
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         // The first option of the navigation drawer is highlighted and the fragment is displayed.
         navigationView.getMenu().getItem(0).setChecked(true);
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
@@ -77,14 +71,29 @@ public class MainActivity extends AppCompatActivity
 
     //implement proper backstack
     final String BackStack= "back";
+    private Boolean backExit = false;
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if(getFragmentManager().getBackStackEntryCount()>0) {
+            getFragmentManager().popBackStack();
+        } else if (backExit) {
             super.onBackPressed();
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            backExit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    backExit = false;
+                }
+            }, 3 * 1000);
+
         }
+
     }
 
     @Override
@@ -154,7 +163,13 @@ public class MainActivity extends AppCompatActivity
             @Override
             //Parse LOGIN
             public void onResponse(JSONObject response){
+                SharedPreferences pref1 = getApplicationContext().getSharedPreferences("loginData", MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = pref1.edit();
+                editor1.putBoolean("loginSuccess", false);
+                editor1.apply();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         }

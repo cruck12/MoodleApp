@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textSize="20pt"
-        android:hint="PROFILE"
+        android:text="PROFILE"
         android:textStyle="bold"
         />
 
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="10pt"
-        android:hint="First Name"
+        android:text="First Name"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40pt"
         />
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="10pt"
-        android:hint="Last Name"
+        android:text="Last Name"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="60pt"
         />
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="10pt"
-        android:hint="Email"
+        android:text="Email"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80pt"
         />
@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="10pt"
-        android:hint="Username"
+        android:text="Username"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="100pt"
         />
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="10pt"
-        android:hint="Entry No"
+        android:text="Entry No"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="120pt"
         />
@@ -69,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="10pt"
-        android:hint="Type"
+        android:text="Type"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="140pt"
         />
