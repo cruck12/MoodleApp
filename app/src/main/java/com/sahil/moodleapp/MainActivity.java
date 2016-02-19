@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
     public void logoutUser(){
         final WifiManager manager = (WifiManager) super.getSystemService(WIFI_SERVICE);
         final DhcpInfo dhcp = manager.getDhcpInfo();

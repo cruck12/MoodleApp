@@ -1,6 +1,5 @@
 package com.sahil.moodleapp;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,19 +7,17 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Courses_Fragment.OnFragmentInteractionListener} interface
+ * {@link Course1.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Courses_Fragment#newInstance} factory method to
+ * Use the {@link Course1#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Courses_Fragment extends Fragment {
+public class Course1 extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -32,7 +29,7 @@ public class Courses_Fragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public Courses_Fragment() {
+    public Course1() {
         // Required empty public constructor
     }
 
@@ -42,11 +39,11 @@ public class Courses_Fragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Courses_Fragment.
+     * @return A new instance of fragment Course1.
      */
     // TODO: Rename and change types and number of parameters
-    public static Courses_Fragment newInstance(String param1, String param2) {
-        Courses_Fragment fragment = new Courses_Fragment();
+    public static Course1 newInstance(String param1, String param2) {
+        Course1 fragment = new Course1();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,33 +58,21 @@ public class Courses_Fragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.fragment_courses_,
-                container, false);
-
-        Button button = (Button) frameLayout.findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // here you set what you want to do when user clicks your button,
-                Fragment fragment = new Course1();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).commit();
-            }
-        });
-
-        // after you've done all your manipulation, return your layout to be shown
-
-        return frameLayout;
+        return inflater.inflate(R.layout.fragment_course1, container, false);
     }
 
-    //The functions that control the courses page buttons
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -111,7 +96,7 @@ public class Courses_Fragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
