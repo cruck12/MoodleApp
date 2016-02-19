@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.DhcpInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -32,7 +33,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, Courses_Fragment.OnFragmentInteractionListener,
+        Grades_Fragment.OnFragmentInteractionListener,
+        Assignments_Fragment.OnFragmentInteractionListener,
+        Notifications_Fragment.OnFragmentInteractionListener,
+        Profile_Fragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
     }
 
+    //implement proper backstack
     final String BackStack= "back";
     @Override
     public void onBackPressed() {
@@ -102,6 +108,8 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -161,5 +169,10 @@ public class MainActivity extends AppCompatActivity
         final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
         RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
         mqueue.add(request);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //can leave it empty
     }
 }

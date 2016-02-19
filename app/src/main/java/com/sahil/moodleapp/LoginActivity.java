@@ -49,12 +49,13 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //default implementation of handling cookies
-        CookieManager cookieManager= new CookieManager();
-        CookieHandler.setDefault(cookieManager);
+//        CookieManager cookieManager= new CookieManager();
+//        CookieHandler.setDefault(cookieManager);
 
         //initialize request queues
         final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
         mqueue= moodleAppApplication.getmRequestQueue();
+//        mqueue=Volley.newRequestQueue(getApplicationContext());
     }
 
     @Override
@@ -122,10 +123,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(JSONObject response){
                 try {
                     boolean success = response.getBoolean("success");
-                    JSONObject user = response.getJSONObject("user");
-                    Toast.makeText(getApplicationContext(),gateway+response.getBoolean("success")+user.getString("username"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),gateway+response.getBoolean("success"), Toast.LENGTH_SHORT).show();
                     if(success)
                     {
+                        JSONObject user = response.getJSONObject("user");
                         //Data received from JSON response. This data is further needed in other activity, hence is shared.
                         SharedPreferences settings = getApplicationContext().getSharedPreferences("profileData",MODE_PRIVATE);
                         SharedPreferences.Editor editor = settings.edit();
@@ -134,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("email",user.getString("email"));
                         editor.putString("username",user.getString("username"));
                         editor.putString("entryNo",user.getString("entry_no"));
-                        editor.putString("type",user.getString("type"));
+                        editor.putString("type",user.getString("type_"));
                         editor.commit();
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -142,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
                 catch (JSONException e){
-//                    Toast.makeText(getApplicationContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
