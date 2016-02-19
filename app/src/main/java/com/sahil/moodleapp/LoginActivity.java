@@ -15,7 +15,6 @@ import android.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.Formatter;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,19 +42,30 @@ public class LoginActivity extends AppCompatActivity {
     RequestQueue mqueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        SharedPreferences preferences;
+        preferences=getApplicationContext().getSharedPreferences("loginData",MODE_PRIVATE);
+        if(preferences.getBoolean("loginSuccess",false)){
+            super.onCreate(savedInstanceState);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+        else {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_login);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-        //default implementation of handling cookies
-//        CookieManager cookieManager= new CookieManager();
-//        CookieHandler.setDefault(cookieManager);
+            //default implementation of handling cookies
+            CookieManager cookieManager = new CookieManager();
+            CookieHandler.setDefault(cookieManager);
 
-        //initialize request queues
-        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
-        mqueue= moodleAppApplication.getmRequestQueue();
+            //initialize request queues
+            final MoodleAppApplication moodleAppApplication = (MoodleAppApplication) getApplicationContext();
+            mqueue = moodleAppApplication.getmRequestQueue();
 //        mqueue=Volley.newRequestQueue(getApplicationContext());
+        }
     }
 
     @Override
@@ -137,9 +147,21 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("entryNo",user.getString("entry_no"));
                         editor.putString("type",user.getString("type_"));
                         editor.apply();
+                        SharedPreferences pref1 = getApplicationContext().getSharedPreferences("loginData",MODE_PRIVATE);
+                        SharedPreferences.Editor editor1 = pref1.edit();
+                        editor1.putBoolean("loginSuccess",true);
+                        editor1.apply();
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
+                    }
+                    else {
+                        SharedPreferences pref1 = getApplicationContext().getSharedPreferences("loginData", MODE_PRIVATE);
+                        SharedPreferences.Editor editor1 = pref1.edit();
+                        editor1.putBoolean("loginSuccess", false);
+                        editor1.apply();
                     }
                 }
                 catch (JSONException e){
