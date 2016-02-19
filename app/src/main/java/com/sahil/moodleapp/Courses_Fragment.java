@@ -2,6 +2,7 @@ package com.sahil.moodleapp;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -71,23 +72,24 @@ public class Courses_Fragment extends Fragment {
         final FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.fragment_courses_,
                 container, false);
 
-        Button button = (Button) frameLayout.findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button mButton = (Button) frameLayout.findViewById(R.id.button);
+        mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // here you set what you want to do when user clicks your button,
-                Fragment fragment = new Course1();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).commit();
+                Intent intent = new Intent(getActivity(), C1.class);
+                startActivity(intent);
             }
         });
+
 
         // after you've done all your manipulation, return your layout to be shown
 
         return frameLayout;
     }
 
-    //The functions that control the courses page buttons
+
+
 
     @Override
     public void onAttach(Context context) {
