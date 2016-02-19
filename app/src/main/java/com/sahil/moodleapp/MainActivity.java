@@ -52,21 +52,6 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        //Filling in the profile details
-        SharedPreferences settings = getApplication().getSharedPreferences("profileData", MODE_PRIVATE);
-        final TextView firstName =(TextView) findViewById(R.id.profile_firstName);
-        final TextView lastName =(TextView) findViewById(R.id.profile_lastName);
-        final TextView email =(TextView) findViewById(R.id.profile_email);
-        final TextView username =(TextView) findViewById(R.id.profile_username);
-        final TextView entryNo =(TextView) findViewById(R.id.profile_entryNo);
-        final TextView type =(TextView) findViewById(R.id.profile_type);
-        firstName.setText(firstName.getText()+"\t:\t"+settings.getString("firstName",""));
-        lastName.setText(lastName.getText()+"\t:\t"+settings.getString("lastName",""));
-        email.setText(email.getText()+"\t:\t"+settings.getString("email",""));
-        username.setText(username.getText()+"\t:\t"+settings.getString("username",""));
-        entryNo.setText(entryNo.getText()+"\t:\t"+settings.getString("entryNo",""));
-        type.setText(type.getText()+"\t:\t"+settings.getString("type",""));
-
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

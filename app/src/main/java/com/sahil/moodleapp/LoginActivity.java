@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("username",user.getString("username"));
                         editor.putString("entryNo",user.getString("entry_no"));
                         editor.putString("type",user.getString("type_"));
-                        editor.commit();
+                        editor.apply();
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
