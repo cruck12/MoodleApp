@@ -167,6 +167,8 @@ public class MainActivity extends AppCompatActivity
                 editor1.putBoolean("loginSuccess", false);
                 editor1.apply();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         }
