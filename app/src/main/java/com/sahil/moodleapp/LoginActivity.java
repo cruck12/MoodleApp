@@ -172,6 +172,7 @@ public class LoginActivity extends AppCompatActivity {
                         editor1.putBoolean("loginSuccess",true);
                         editor1.apply();
 
+                        //Setting the alarm manager to check for notifications every 15 minutes
                         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                         manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,AlarmManager.INTERVAL_FIFTEEN_MINUTES,AlarmManager.INTERVAL_FIFTEEN_MINUTES, pintent);
 
