@@ -5,9 +5,6 @@ import android.app.Application;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-/**
- * Created by Sahil on 2/18/2016.
- */
 public class MoodleAppApplication extends Application{
         private static RequestQueue mRequestQueue;
 
@@ -20,4 +17,5 @@ public class MoodleAppApplication extends Application{
         public RequestQueue getmRequestQueue(){
             return mRequestQueue;
         }
+
 }

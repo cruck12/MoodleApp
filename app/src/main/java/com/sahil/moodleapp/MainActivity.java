@@ -1,5 +1,6 @@
 package com.sahil.moodleapp;
 
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -241,6 +242,11 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                //switch off the regular notiication check when logging out
+                AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                manager.cancel(LoginActivity.pintent);
+
                 startActivity(intent);
             }
         }

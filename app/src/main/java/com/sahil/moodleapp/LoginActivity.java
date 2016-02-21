@@ -1,6 +1,8 @@
 package com.sahil.moodleapp;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +35,7 @@ import org.json.JSONObject;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.util.Calendar;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,10 +43,12 @@ public class LoginActivity extends AppCompatActivity {
 //    final String URL = "http://103.27.8.44:8000";
     String URL;
     RequestQueue mqueue;
+    static PendingIntent pintent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences preferences;
-        preferences=getApplicationContext().getSharedPreferences("loginData",MODE_PRIVATE);
+        preferences=getApplicationContext().getSharedPreferences("loginData", MODE_PRIVATE);
         if(preferences.getBoolean("loginSuccess",false)){
             super.onCreate(savedInstanceState);
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -66,7 +71,22 @@ public class LoginActivity extends AppCompatActivity {
             mqueue = moodleAppApplication.getmRequestQueue();
 //        mqueue=Volley.newRequestQueue(getApplicationContext());
         }
+
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        pintent = PendingIntent.getBroadcast(LoginActivity.this, 0, alarmIntent, 0);
+
     }
+
+   /* public void start(View v) {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,AlarmManager.INTERVAL_FIFTEEN_MINUTES,AlarmManager.INTERVAL_FIFTEEN_MINUTES, pintent);
+    }
+
+    public void cancel(View v) {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pintent);
+        Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -151,6 +171,10 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor1 = pref1.edit();
                         editor1.putBoolean("loginSuccess",true);
                         editor1.apply();
+
+                        //Setting the alarm manager to check for notifications every 15 minutes
+                        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                        manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,AlarmManager.INTERVAL_FIFTEEN_MINUTES,AlarmManager.INTERVAL_FIFTEEN_MINUTES, pintent);
 
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
