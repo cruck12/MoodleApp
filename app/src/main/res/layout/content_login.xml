@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,39 +11,31 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.sahil.moodleapp.LoginActivity"
-    tools:showIn="@layout/activity_login">
+    tools:showIn="@layout/activity_login"
+    android:background="@drawable/yellowlinedpad">
 
     <TextView
-        android:id="@+id/textView_Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username"
-        android:textSize="8pt"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:hint="Moodle App"
+        android:textSize="20sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/button_login"
+        android:layout_alignEnd="@+id/button_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp" />
+
+
     <EditText
         android:id="@+id/editText_Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView_Username"
         android:hint="Username"
+        android:layout_above="@+id/editText_Password"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
-    <TextView
-        android:id="@+id/textView_Password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:textSize="8pt"
-        android:layout_below="@id/editText_Username"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:id="@+id/editText_Password"
@@ -50,20 +43,23 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:layout_below="@+id/textView_Password"
+        android:hint="Password"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/button_login"
+        />
 
     <Button
         android:id="@+id/button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Login"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:onClick="loginUser"/>
+        android:onClick="loginUser"
+        android:layout_centerVertical="true"
+        android:background="#a3551d" />
 
 
 

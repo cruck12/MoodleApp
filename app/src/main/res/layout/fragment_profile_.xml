@@ -2,76 +2,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sahil.moodleapp.Profile_Fragment">
+    tools:context="com.sahil.moodleapp.Profile_Fragment"
+    android:background="@drawable/yellowlinedpad">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="20pt"
-        android:text="PROFILE"
-        android:textStyle="bold"
-        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/profile_firstName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10pt"
-        android:text="First Name"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40pt"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="20pt"
+            android:text="PROFILE"
+            android:textStyle="bold"
+            android:id="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"/>
 
-    <TextView
-        android:id="@+id/profile_lastName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10pt"
-        android:text="Last Name"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="60pt"
-        />
+        <TextView
+            android:id="@+id/profile_entryNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12pt"
+            android:text="Entry No"
+            android:layout_below="@+id/textView"
+            android:paddingTop="25dp"
+            android:paddingLeft="5dp"
+             />
 
-    <TextView
-        android:id="@+id/profile_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10pt"
-        android:text="Email"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="80pt"
-        />
+        <TextView
+            android:id="@+id/profile_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12pt"
+            android:text="Type"
+            android:layout_below="@+id/profile_entryNo"
+            android:paddingTop="25dp"
+            android:paddingLeft="5dp"
+            />
 
-    <TextView
-        android:id="@+id/profile_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10pt"
-        android:text="Username"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="100pt"
-        />
+        <TextView
+            android:id="@+id/profile_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12pt"
+            android:text="Email"
+            android:layout_below="@+id/profile_type"
+            android:paddingTop="25dp"
+            android:paddingLeft="5dp"
+            />
 
-    <TextView
-        android:id="@+id/profile_entryNo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10pt"
-        android:text="Entry No"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="120pt"
-        />
+        <TextView
+            android:id="@+id/profile_lastName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12pt"
+            android:text="Last Name"
+            android:layout_below="@+id/profile_email"
+            android:paddingTop="25dp"
+            android:paddingLeft="5dp"
+            />
 
-    <TextView
-        android:id="@+id/profile_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10pt"
-        android:text="Type"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="140pt"
-        />
+        <TextView
+            android:id="@+id/profile_firstName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12pt"
+            android:text="First Name"
+            android:layout_below="@+id/profile_lastName"
+            android:paddingTop="25dp"
+            android:paddingLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/profile_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12pt"
+            android:text="Username"
+            android:layout_below="@+id/profile_firstName"
+            android:paddingTop="25dp"
+            android:paddingLeft="5dp"
+            />
+
+    </RelativeLayout>
+
 
 </FrameLayout>
