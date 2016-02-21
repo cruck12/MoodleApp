@@ -21,7 +21,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +34,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -130,6 +135,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_courses) {
             fragment = new Courses_Fragment();
             fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
+            showCourses();
         } else if (id == R.id.nav_grades) {
             fragment = new Grades_Fragment();
             fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
@@ -150,6 +156,71 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showCourses() {
+        final WifiManager manager = (WifiManager) super.getSystemService(WIFI_SERVICE);
+        final DhcpInfo dhcp = manager.getDhcpInfo();
+        String gateway = LoginActivity.intToIp(dhcp.gateway);
+        String URL = "http://"+gateway +":8000";
+        JsonObjectRequest request = new JsonObjectRequest(URL + "​/courses/list.json",null
+                ,new Response.Listener<JSONObject>(){
+            @Override
+            //Parse LOGIN
+            public void onResponse(JSONObject response){
+                FrameLayout layout = (FrameLayout) findViewById(R.id.course_layout);
+                try {
+                    JSONArray courses = response.getJSONArray("courses");
+                    for(int i=0;i<courses.length();i++){
+                        final JSONObject course = courses.getJSONObject(i);
+                        String code = course.getString("code");
+                        //the layout on which you are working
+
+                        //set the properties for button
+                        Button btnTag = new Button(getApplicationContext());
+                        btnTag.setLayoutParams(new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT));
+                        btnTag.setText(code);
+                        btnTag.setId(i);
+                        btnTag.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent intent = new Intent(getApplicationContext(), C1.class);
+                                    intent.putExtra("courseCode", course.getString("code"));
+                                    intent.putExtra("courseName", course.getString("name"));
+                                    intent.putExtra("courseDescription", course.getString("description"));
+                                    intent.putExtra("courseCredits", course.getInt("credits"));
+                                    intent.putExtra("courseId", course.getInt("id"));
+                                    intent.putExtra("courseLtp", course.getString("l_t_p"));
+
+                                    startActivity(intent);
+                                }
+                                catch (JSONException e){
+
+                                }
+                            }
+                        });
+                        //add button to the layout
+                        layout.addView(btnTag);
+                    }
+                }
+                catch(JSONException e){
+
+                }
+            }
+        }
+                ,new Response.ErrorListener() {
+            @Override
+            //Handle Errors
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(getApplicationContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        request.setTag("logoutRequest");
+        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
+        RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
+        mqueue.add(request);
     }
 
 

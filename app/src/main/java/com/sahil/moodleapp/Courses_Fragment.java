@@ -72,17 +72,6 @@ public class Courses_Fragment extends Fragment {
         final FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.fragment_courses_,
                 container, false);
 
-        Button mButton = (Button) frameLayout.findViewById(R.id.button);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // here you set what you want to do when user clicks your button,
-                Intent intent = new Intent(getActivity(), C1.class);
-                startActivity(intent);
-            }
-        });
-
-
         // after you've done all your manipulation, return your layout to be shown
 
         return frameLayout;

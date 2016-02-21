@@ -11,13 +11,5 @@
         android:layout_height="match_parent"
         android:text="Courses" />
 
-    <Button
-        android:layout_width="153dp"
-        android:layout_height="137dp"
-        android:text="Course 1"
-        android:id="@+id/button"
-        android:layout_gravity="center"
-        android:contextClickable="false"
-         />
 
 </FrameLayout>
