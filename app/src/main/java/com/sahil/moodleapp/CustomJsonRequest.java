@@ -2,9 +2,13 @@ package com.sahil.moodleapp;
 
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -12,52 +16,55 @@ import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
 
-public class CustomJsonRequest extends Request<JSONObject> {
+public class CustomJsonRequest extends JsonObjectRequest {
     //SourceCode help : http://stackoverflow.com/questions/16626032/volley-post-get-parameters?lq=1
-    private Listener<JSONObject> listener;
+
     private Map<String, String> params;
+    private Listener<JSONObject> listener;
+    private Map<String, String> headers;
 
-    //for possible future get requests
     public CustomJsonRequest(String url, Map<String, String> params,
-                             Listener<JSONObject> reponseListener, ErrorListener errorListener) {
-        super(Method.GET, url, errorListener);
-        this.listener = reponseListener;
-        this.params = params;
-    }
-
-    //for custom Map parameter
-    // method : get type of request (GET, POST, PUT etc)
-    // url : server to send request
-    // params : Parameter to send to server, here- Map
-    // responseListener : to get the response from the server
-    // errorListner : to get any error messages during transaction
-    public CustomJsonRequest(int method, String url, Map<String, String> params,
                              Listener<JSONObject> responseListener, ErrorListener errorListener) {
-        super(method, url, errorListener);
+        super(url,null,responseListener, errorListener);
         this.listener = responseListener;
         this.params = params;
-    }
-    //getter for params
-    protected Map<String, String> getParams()
-            throws com.android.volley.AuthFailureError {
-        return params;
+
     }
 
     @Override
-    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-        try {
-            String jsonString = new String(response.data,
-                    HttpHeaderParser.parseCharset(response.headers));
-            return Response.success(new JSONObject(jsonString),
-                    HttpHeaderParser.parseCacheHeaders(response));
-        } catch (UnsupportedEncodingException e) {
-            return Response.error(new ParseError(e));
-        } catch (JSONException je) {
-            return Response.error(new ParseError(je));
-        }
+    public Map<String, String> getParams() throws AuthFailureError {
+        return params;
     }
 
+
+
+    @Override
+    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+        // since we don't know which of the two underlying network vehicles
+        // will Volley use, we have to handle and store session cookies manually
+        MoodleAppApplication.get().checkSessionCookie(response.headers);
+
+        return super.parseNetworkResponse(response);
+    }
+
+    /* (non-Javadoc)
+     * @see com.android.volley.Request#getHeaders()
+     */
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        Map<String, String> headers = super.getHeaders();
+
+        if (headers == null
+                || headers.equals(Collections.emptyMap())) {
+            headers = new HashMap<String, String>();
+        }
+
+        MoodleAppApplication.get().addSessionCookie(headers);
+
+        return headers;
+    }
     @Override
     protected void deliverResponse(JSONObject response) {
         listener.onResponse(response);

@@ -63,11 +63,9 @@ public class LoginActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
 
             //default implementation of handling cookies
-            CookieManager cookieManager = new CookieManager();
-            CookieHandler.setDefault(cookieManager);
+            final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
 
-            //initialize request queues
-            final MoodleAppApplication moodleAppApplication = (MoodleAppApplication) getApplicationContext();
+            //initialize request queue
             mqueue = moodleAppApplication.getmRequestQueue();
 //        mqueue=Volley.newRequestQueue(getApplicationContext());
         }
@@ -146,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String username, String password, final String gateway) {
-        JsonObjectRequest request = new JsonObjectRequest(URL + "/default/login.json?userid="+username+"&password="+password,null
+        CustomJsonRequest request = new CustomJsonRequest(URL + "/default/login.json?userid="+username+"&password="+password,null
                 ,new Response.Listener<JSONObject>(){
             @Override
             //Parse LOGIN

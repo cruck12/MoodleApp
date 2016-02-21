@@ -27,6 +27,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ import org.json.JSONObject;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.net.CookieStore;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, Courses_Fragment.OnFragmentInteractionListener,
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity
         Notifications_Fragment.OnFragmentInteractionListener,
         Profile_Fragment.OnFragmentInteractionListener{
 
+    String URL;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +66,10 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        //default implementation of handling cookies
-        CookieManager cookieManager= new CookieManager();
-        CookieHandler.setDefault(cookieManager);
+        final WifiManager manager = (WifiManager) super.getSystemService(WIFI_SERVICE);
+        final DhcpInfo dhcp = manager.getDhcpInfo();
+        String gateway = LoginActivity.intToIp(dhcp.gateway);
+        URL = "http://"+gateway +":8000";
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -97,9 +102,7 @@ public class MainActivity extends AppCompatActivity
                     backExit = false;
                 }
             }, 3 * 1000);
-
         }
-
     }
 
     @Override
@@ -140,6 +143,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_grades) {
             fragment = new Grades_Fragment();
             fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
+            showGrades();
         } else if (id == R.id.nav_assignments) {
             fragment = new Assignments_Fragment();
             fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
@@ -159,12 +163,77 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private void showGrades() {
+        CustomJsonRequest request = new CustomJsonRequest(URL+"/grades.json",null
+                ,new Response.Listener<JSONObject>(){
+            @Override
+            //Parse LOGIN
+            public void onResponse(JSONObject response){
+                FrameLayout layout = (FrameLayout) findViewById(R.id.grades_layout);
+                //the layout on which you are working
+                TableLayout table = (TableLayout)findViewById(R.id.table_Grades);
+                try {
+                    JSONArray courses = response.getJSONArray("courses");
+                    JSONArray grades = response.getJSONArray("grades");
+                    for(int i=0;i<courses.length();i++){
+                        JSONObject course = courses.getJSONObject(i);
+                        JSONObject grade = grades.getJSONObject(i);
+                        String code = course.getString("code");
+
+
+                        // create a new TableRow
+                        TableRow row = new TableRow(getApplicationContext());
+
+                        // create a new TextView for showing xml data
+                        TextView t1 = new TextView(getApplicationContext());
+                        // set the text
+                        t1.setText( course.getString(code));
+                        // add the TextView  to the new TableRow
+                        row.addView(t1);
+
+                        TextView t2 = new TextView(getApplicationContext());
+                        t2.setText(grade.getString("name") +" / ");
+                        row.addView(t2);
+
+                        TextView t3 = new TextView(getApplicationContext());
+                        t3.setText(grade.getInt("score") +" / ");
+                        row.addView(t3);
+
+                        TextView t4 = new TextView(getApplicationContext());
+                        t4.setText(grade.getInt("out_of") +" / ");
+                        row.addView(t4);
+
+                        TextView t5 = new TextView(getApplicationContext());
+                        t5.setText(grade.getInt("weightage"));
+                        row.addView(t5);
+
+                        // add the TableRow to the TableLayout
+                        table.addView(row, new TableLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT));
+                    };
+                    Toast.makeText(getApplicationContext(),"test "+grades.length(), Toast.LENGTH_SHORT).show();
+                }
+                catch(JSONException e){
+                    Toast.makeText(getApplicationContext(),"test "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+                ,new Response.ErrorListener() {
+            @Override
+            //Handle Errors
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(getApplicationContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        request.setTag("gradeRequest");
+        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
+        RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
+        mqueue.add(request);
+    }
+
+
+
     private void showCourses() {
-        final WifiManager manager = (WifiManager) super.getSystemService(WIFI_SERVICE);
-        final DhcpInfo dhcp = manager.getDhcpInfo();
-        String gateway = LoginActivity.intToIp(dhcp.gateway);
-        String URL = "http://"+gateway +":8000";
-        JsonObjectRequest request = new JsonObjectRequest(URL + "​/courses/list.json",null
+        CustomJsonRequest request = new CustomJsonRequest(URL+"​/courses/list.json",null
                 ,new Response.Listener<JSONObject>(){
             @Override
             //Parse LOGIN
@@ -218,7 +287,7 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-        request.setTag("logoutRequest");
+        request.setTag("courseRequest");
         final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
         RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
         mqueue.add(request);
@@ -226,11 +295,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public void logoutUser(){
-        final WifiManager manager = (WifiManager) super.getSystemService(WIFI_SERVICE);
-        final DhcpInfo dhcp = manager.getDhcpInfo();
-        String gateway = LoginActivity.intToIp(dhcp.gateway);
-        String URL = "http://"+gateway +":8000";
-        JsonObjectRequest request = new JsonObjectRequest(URL + "/default/logout.json",null
+        CustomJsonRequest request = new CustomJsonRequest(URL + "/default/logout.json",null
                 ,new Response.Listener<JSONObject>(){
             @Override
             //Parse LOGIN
