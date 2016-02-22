@@ -7,7 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.sahil.moodleapp.MainActivity"
     tools:showIn="@layout/app_bar_main"
-    android:background="@drawable/yellowlinedpad">
+    android:background="#f2f0ad">
 
     //The frame that is replaced when onCreate is called.
     <FrameLayout

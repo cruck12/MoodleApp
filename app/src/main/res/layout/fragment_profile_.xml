@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.sahil.moodleapp.Profile_Fragment"
-    android:background="@drawable/yellowlinedpad"
+    android:background="#f2f0ad"
     >
 
     <RelativeLayout

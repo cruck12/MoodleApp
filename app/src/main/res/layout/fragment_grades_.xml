@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.sahil.moodleapp.Grades_Fragment"
     android:id="@+id/grades_layout"
-    android:background="@drawable/yellowlinedpad">
+    android:background="#f2f0ad">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.sahil.moodleapp.Courses_Fragment"
     android:id="@+id/course_layout"
-    android:background="@drawable/yellowlinedpad"
+    android:background="#f2f0ad"
     >
     <RelativeLayout
         android:id="@+id/course_rel_layout"
