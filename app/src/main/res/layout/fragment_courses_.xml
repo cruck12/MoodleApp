@@ -6,12 +6,22 @@
     android:id="@+id/course_layout"
     android:background="@drawable/yellowlinedpad"
     >
+    <RelativeLayout
+        android:id="@+id/course_rel_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Courses" />
+        android:id="@+id/courses_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Courses"
+        android:textSize="10pt"/>
+
+
+
+    </RelativeLayout>
 
 
 </FrameLayout>

@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity
                         row.addView(t1);
 
                         TextView t2 = new TextView(getApplicationContext());
-                        t2.setText(grade.getString("name") );
+                        t2.setText(grade.getString("name") + " " );
                         t2.setTextColor(color);
                         row.addView(t2);
 
@@ -237,12 +237,12 @@ public class MainActivity extends AppCompatActivity
 
 
     private void showCourses() {
-        CustomJsonRequest request = new CustomJsonRequest(URL+"​/courses/list.json",null
+        CustomJsonRequest request = new CustomJsonRequest(URL+"/courses/list.json",null
                 ,new Response.Listener<String>(){
             @Override
             //Parse LOGIN
             public void onResponse(String response1){
-                FrameLayout layout = (FrameLayout) findViewById(R.id.course_layout);
+                RelativeLayout layout = (RelativeLayout) findViewById(R.id.course_rel_layout);
                 try {
                     JSONObject response = new JSONObject(response1);
                     JSONArray courses = response.getJSONArray("courses");
@@ -253,9 +253,17 @@ public class MainActivity extends AppCompatActivity
 
                         //set the properties for button
                         Button btnTag = new Button(getApplicationContext());
-                        btnTag.setLayoutParams(new DrawerLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT));
+                        btnTag.setId(i+1);
+                        RelativeLayout.LayoutParams lay= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        if(i!=0){
+                            lay.addRule(RelativeLayout.BELOW,i);
+                        }
+                        else{
+                            lay.addRule(RelativeLayout.BELOW,R.id.courses_label);
+                        }
+                        btnTag.setLayoutParams(lay);
                         btnTag.setText(code);
-                        btnTag.setId(i);
+
                         btnTag.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
