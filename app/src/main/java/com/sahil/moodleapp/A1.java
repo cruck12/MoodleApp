@@ -55,11 +55,11 @@ public class A1 extends AppCompatActivity {
         // create a new TextView for showing xml data
         TextView t3 = new TextView(getApplicationContext());
         // set the text
-        t3.setText(created);
+        t3.setText("Date Posted: " +created);
         //set text color
         t3.setTextColor(color);
         t3.setId(R.id.created);
-        t3.setTextSize(TypedValue.COMPLEX_UNIT_PT,6);
+        t3.setTextSize(TypedValue.COMPLEX_UNIT_PT,8);
         RelativeLayout.LayoutParams lay2= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         lay2.addRule(RelativeLayout.BELOW,R.id.assignment_description);
         t3.setLayoutParams(lay2);
@@ -68,11 +68,11 @@ public class A1 extends AppCompatActivity {
         // create a new TextView for showing xml data
         TextView t4 = new TextView(getApplicationContext());
         // set the text
-        t4.setText(deadline);
+        t4.setText("Deadline: "+deadline);
         //set text color
         t4.setTextColor(color);
-        t4.setId(R.id.assignment_description);
-        t4.setTextSize(TypedValue.COMPLEX_UNIT_PT,6);
+        t4.setId(R.id.deadline);
+        t4.setTextSize(TypedValue.COMPLEX_UNIT_PT,8);
         RelativeLayout.LayoutParams lay3= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         lay3.addRule(RelativeLayout.BELOW,R.id.created);
         t4.setLayoutParams(lay3);
