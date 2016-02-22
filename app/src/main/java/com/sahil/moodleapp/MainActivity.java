@@ -77,8 +77,12 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // The first option of the navigation drawer is highlighted and the fragment is displayed.
-        navigationView.getMenu().getItem(0).setChecked(true);
-        onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        if(savedInstanceState==null) {
+            navigationView.getMenu().getItem(0).setChecked(true);
+            onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        }
+        else{
+        }
     }
 
     //implement proper backstack
@@ -148,6 +152,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_assignments) {
             fragment = new Assignments_Fragment();
             fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
+            showAssignments();
         } else if (id == R.id.nav_notifications) {
             fragment = new Notifications_Fragment();
             fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
@@ -162,6 +167,98 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showAssignments() {
+        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
+        RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
+        CustomJsonRequest request1 = new CustomJsonRequest(URL + "/courses/list.json", null
+                , new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                try{
+                    JSONObject response = new JSONObject(s);
+                    JSONArray courses = response.getJSONArray("courses");
+                    for(int i=0;i<courses.length();i++){
+                        String code = courses.getJSONObject(i).getString("code");
+                        showAssign(code);
+                    }
+                }
+                catch (JSONException e){
+                    Toast.makeText(getApplicationContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(getApplicationContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        mqueue.add(request1);
+    }
+
+    private void showAssign(String code) {
+        CustomJsonRequest request = new CustomJsonRequest(URL + "/courses/course.json/" + code + "/assignments", null
+                , new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                RelativeLayout layout = (RelativeLayout) findViewById(R.id.assign_rel_layout);
+                try {
+                    JSONObject request = new JSONObject(s);
+                    JSONArray assignments = request.getJSONArray("assignments");
+                    for(int i=0; i<assignments.length();i++){
+                        final JSONObject assignment = assignments.getJSONObject(i);
+
+                        String name = assignment.getString("name");
+
+                        //set the properties for button
+                        Button btnTag = new Button(getApplicationContext());
+                        btnTag.setId(i+1);
+                        RelativeLayout.LayoutParams lay= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        if(i!=0){
+                            lay.addRule(RelativeLayout.BELOW,i);
+                        }
+                        else{
+                            lay.addRule(RelativeLayout.BELOW,R.id.assignment_label);
+                        }
+                        btnTag.setLayoutParams(lay);
+                        btnTag.setText(name.split(":")[0]);
+
+                        btnTag.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent intent = new Intent(getApplicationContext(), A1.class);
+                                    intent.putExtra("createdAt", assignment.getString("created_at"));
+                                    intent.putExtra("assignName", assignment.getString("name"));
+                                    intent.putExtra("assignDescription", assignment.getString("description"));
+                                    intent.putExtra("deadline", assignment.getString("deadline"));
+                                    intent.putExtra("courseId", assignment.getInt("registered_course_id"));
+                                    intent.putExtra("assignId", assignment.getInt("id"));
+                                    startActivity(intent);
+                                }
+                                catch (JSONException e){
+                                    Toast.makeText(getApplicationContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        layout.addView(btnTag);
+                    }
+                }
+                catch (JSONException e){
+                    Toast.makeText(getApplicationContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(getApplicationContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
+        RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
+        mqueue.add(request);
     }
 
     private void showGrades() {
@@ -214,7 +311,6 @@ public class MainActivity extends AppCompatActivity
                         // add the TableRow to the TableLayout
                         table.addView(row, new TableLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT));
                     };
-                    Toast.makeText(getApplicationContext(),"test1 "+grades.length(), Toast.LENGTH_SHORT).show();
                 }
                 catch(JSONException e){
                     Toast.makeText(getApplicationContext(),"test2 "+e.getMessage(), Toast.LENGTH_SHORT).show();

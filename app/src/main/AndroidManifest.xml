@@ -24,8 +24,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AlarmReceiver" >
-        </receiver>
+        <receiver android:name=".AlarmReceiver"></receiver>
 
         <activity
             android:name=".MainActivity"
@@ -34,7 +33,8 @@
         <activity
             android:name=".C1"
             android:label="@string/title_activity_c1"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".A1"></activity>
     </application>
 
 </manifest>

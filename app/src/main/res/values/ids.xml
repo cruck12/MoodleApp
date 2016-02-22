@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="assignment_name" type="id"/>
+    <item name="assignment_description" type="id"/>
+    <item name="created" type="id"/>
+    <item name="deadline" type="id"/>
+
+</resources>
