@@ -71,7 +71,7 @@ public class A1 extends AppCompatActivity {
         t4.setText(deadline);
         //set text color
         t4.setTextColor(color);
-        t4.setId(R.id.assignment_description);
+        t4.setId(R.id.deadline);
         t4.setTextSize(TypedValue.COMPLEX_UNIT_PT,6);
         RelativeLayout.LayoutParams lay3= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         lay3.addRule(RelativeLayout.BELOW,R.id.created);
