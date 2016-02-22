@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -188,25 +189,27 @@ public class MainActivity extends AppCompatActivity
                         // create a new TextView for showing xml data
                         TextView t1 = new TextView(getApplicationContext());
                         // set the text
-                        t1.setText( course.getString(code));
+                        t1.setText( code);
+                        //set text color
+                        int color =ContextCompat.getColor(getApplicationContext(),R.color.textColor);
+                        t1.setTextColor(color);
                         // add the TextView  to the new TableRow
                         row.addView(t1);
 
                         TextView t2 = new TextView(getApplicationContext());
-                        t2.setText(grade.getString("name") +" / ");
+                        t2.setText(grade.getString("name") );
+                        t2.setTextColor(color);
                         row.addView(t2);
 
                         TextView t3 = new TextView(getApplicationContext());
-                        t3.setText(grade.getInt("score") +" / ");
+                        t3.setText(grade.getInt("score") + " " );
+                        t3.setTextColor(color);
                         row.addView(t3);
 
                         TextView t4 = new TextView(getApplicationContext());
-                        t4.setText(grade.getInt("out_of") +" / ");
+                        t4.setText(grade.getInt("out_of") + " ");
+                        t4.setTextColor(color);
                         row.addView(t4);
-
-                        TextView t5 = new TextView(getApplicationContext());
-                        t5.setText(grade.getInt("weightage"));
-                        row.addView(t5);
 
                         // add the TableRow to the TableLayout
                         table.addView(row, new TableLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT));
