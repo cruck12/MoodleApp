@@ -17,17 +17,17 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
-public class CustomJsonRequest extends JsonObjectRequest {
+public class CustomJsonRequest extends StringRequest {
     //SourceCode help : http://stackoverflow.com/questions/16626032/volley-post-get-parameters?lq=1
 
     private Map<String, String> params;
-    private Listener<JSONObject> listener;
-    private Map<String, String> headers;
+    private Listener<String> listener;
 
     public CustomJsonRequest(String url, Map<String, String> params,
-                             Listener<JSONObject> responseListener, ErrorListener errorListener) {
-        super(url,null,responseListener, errorListener);
+                             Listener<String> responseListener, ErrorListener errorListener) {
+        super(Method.GET,url,responseListener, errorListener);
         this.listener = responseListener;
         this.params = params;
 
@@ -41,7 +41,7 @@ public class CustomJsonRequest extends JsonObjectRequest {
 
 
     @Override
-    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+    protected Response<String> parseNetworkResponse(NetworkResponse response) {
         // since we don't know which of the two underlying network vehicles
         // will Volley use, we have to handle and store session cookies manually
         MoodleAppApplication.get().checkSessionCookie(response.headers);
@@ -66,7 +66,7 @@ public class CustomJsonRequest extends JsonObjectRequest {
         return headers;
     }
     @Override
-    protected void deliverResponse(JSONObject response) {
+    protected void deliverResponse(String response) {
         listener.onResponse(response);
     }
 }

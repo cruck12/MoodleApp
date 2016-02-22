@@ -165,16 +165,17 @@ public class MainActivity extends AppCompatActivity
 
     private void showGrades() {
         CustomJsonRequest request = new CustomJsonRequest(URL+"/grades.json",null
-                ,new Response.Listener<JSONObject>(){
+                ,new Response.Listener<String>(){
             @Override
             //Parse LOGIN
-            public void onResponse(JSONObject response){
+            public void onResponse(String response){
                 FrameLayout layout = (FrameLayout) findViewById(R.id.grades_layout);
                 //the layout on which you are working
                 TableLayout table = (TableLayout)findViewById(R.id.table_Grades);
                 try {
-                    JSONArray courses = response.getJSONArray("courses");
-                    JSONArray grades = response.getJSONArray("grades");
+                    JSONObject response1 = new JSONObject(response);
+                    JSONArray courses = response1.getJSONArray("courses");
+                    JSONArray grades = response1.getJSONArray("grades");
                     for(int i=0;i<courses.length();i++){
                         JSONObject course = courses.getJSONObject(i);
                         JSONObject grade = grades.getJSONObject(i);
@@ -210,10 +211,10 @@ public class MainActivity extends AppCompatActivity
                         // add the TableRow to the TableLayout
                         table.addView(row, new TableLayout.LayoutParams(DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT));
                     };
-                    Toast.makeText(getApplicationContext(),"test "+grades.length(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"test1 "+grades.length(), Toast.LENGTH_SHORT).show();
                 }
                 catch(JSONException e){
-                    Toast.makeText(getApplicationContext(),"test "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"test2 "+e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -234,12 +235,13 @@ public class MainActivity extends AppCompatActivity
 
     private void showCourses() {
         CustomJsonRequest request = new CustomJsonRequest(URL+"​/courses/list.json",null
-                ,new Response.Listener<JSONObject>(){
+                ,new Response.Listener<String>(){
             @Override
             //Parse LOGIN
-            public void onResponse(JSONObject response){
+            public void onResponse(String response1){
                 FrameLayout layout = (FrameLayout) findViewById(R.id.course_layout);
                 try {
+                    JSONObject response = new JSONObject(response1);
                     JSONArray courses = response.getJSONArray("courses");
                     for(int i=0;i<courses.length();i++){
                         final JSONObject course = courses.getJSONObject(i);
@@ -296,23 +298,29 @@ public class MainActivity extends AppCompatActivity
 
     public void logoutUser(){
         CustomJsonRequest request = new CustomJsonRequest(URL + "/default/logout.json",null
-                ,new Response.Listener<JSONObject>(){
+                ,new Response.Listener<String>(){
             @Override
             //Parse LOGIN
-            public void onResponse(JSONObject response){
-                SharedPreferences pref1 = getApplicationContext().getSharedPreferences("loginData", MODE_PRIVATE);
-                SharedPreferences.Editor editor1 = pref1.edit();
-                editor1.putBoolean("loginSuccess", false);
-                editor1.apply();
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            public void onResponse(String response1){
+                try {
+                    JSONObject response = new JSONObject(response1);
+                    SharedPreferences pref1 = getApplicationContext().getSharedPreferences("loginData", MODE_PRIVATE);
+                    SharedPreferences.Editor editor1 = pref1.edit();
+                    editor1.putBoolean("loginSuccess", false);
+                    editor1.apply();
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                //switch off the regular notiication check when logging out
-                AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                manager.cancel(LoginActivity.pintent);
+                    //switch off the regular notiication check when logging out
+                    AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    manager.cancel(LoginActivity.pintent);
 
-                startActivity(intent);
+                    startActivity(intent);
+                }
+                catch (JSONException e){
+
+                }
             }
         }
                 ,new Response.ErrorListener() {

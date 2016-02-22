@@ -12,6 +12,7 @@ import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -144,14 +145,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String username, String password, final String gateway) {
-        CustomJsonRequest request = new CustomJsonRequest(URL + "/default/login.json?userid="+username+"&password="+password,null
-                ,new Response.Listener<JSONObject>(){
+        final CustomJsonRequest request = new CustomJsonRequest(URL + "/default/login.json?userid="+username+"&password="+password,null
+                ,new Response.Listener<String>(){
             @Override
             //Parse LOGIN
-            public void onResponse(JSONObject response){
+            public void onResponse(String response1){
                 try {
+                    JSONObject response = new JSONObject(response1);
                     boolean success = response.getBoolean("success");
-                    Toast.makeText(getApplicationContext(),gateway+response.getBoolean("success"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),success + gateway, Toast.LENGTH_SHORT).show();
                     if(success)
                     {
                         JSONObject user = response.getJSONObject("user");
@@ -169,6 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor1 = pref1.edit();
                         editor1.putBoolean("loginSuccess",true);
                         editor1.apply();
+
 
                         //Setting the alarm manager to check for notifications every 15 minutes
                         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);

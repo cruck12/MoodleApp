@@ -15,10 +15,10 @@ import java.util.Map;
 public class MoodleAppApplication extends Application{
     private static final String SET_COOKIE_KEY = "Set-Cookie";
     private static final String COOKIE_KEY = "Cookie";
-    private static final String SESSION_COOKIE = "sessionid";
+    private static final String SESSION_COOKIE = "session_id_moodleplus";
 
     private static RequestQueue mRequestQueue;
-    private static CookieManager cookieManager;
+//    private static CookieManager cookieManager;
     private static MoodleAppApplication instance;
     private SharedPreferences preferences;
 
@@ -43,7 +43,7 @@ public class MoodleAppApplication extends Application{
             return mRequestQueue;
         }
 
-    public CookieManager getCookieManager(){return cookieManager;}
+//    public CookieManager getCookieManager(){return cookieManager;}
 
     /**
      * Checks the response headers for session cookie and saves it
