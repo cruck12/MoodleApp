@@ -10,6 +10,7 @@ import android.text.Html;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -130,17 +131,17 @@ public class ThreadActivity extends AppCompatActivity {
                         RelativeLayout layout = (RelativeLayout) findViewById(R.id.thread_layout);
                         final String commentUser=commentUsers.getJSONObject(i).getString("first_name")+" "+commentUsers.getJSONObject(i).getString("last_name");
                         final String comment=comments.getJSONObject(i).getString("description");
-                        String display="<b>"+commentUser+"</b> :"+comment;
+                        String display="<b>"+commentUser+"</b> : "+comment;
                         TextView txt=new TextView(getApplicationContext());
                         txt.setText(Html.fromHtml(display));
                         txt.setTextColor(color);
-                        txt.setId(i);
+                        txt.setId(i+10);
                         txt.setTextSize(TypedValue.COMPLEX_UNIT_PT, 9);
                         RelativeLayout.LayoutParams lay= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         if(i==0)
-                        lay.addRule(RelativeLayout.BELOW, R.id.thread_by);
+                            lay.addRule(RelativeLayout.BELOW, R.id.thread_by);
                         else
-                            lay.addRule(RelativeLayout.BELOW, i-1);
+                            lay.addRule(RelativeLayout.BELOW, i+9);
                         txt.setLayoutParams(lay);
                         layout.addView(txt);
 
@@ -163,6 +164,63 @@ public class ThreadActivity extends AppCompatActivity {
         RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
         mqueue.add(request);
 
+        sendComment();
+    }
+
+    private void sendComment()
+    {
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.thread_layout_outer);
+
+        Button sendButton = new Button(getApplicationContext());
+        sendButton.setText("SEND");
+        RelativeLayout.LayoutParams lay2= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        lay2.addRule(RelativeLayout.BELOW, R.id.comText);
+        sendButton.setLayoutParams(lay2);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    EditText comment_send = (EditText) findViewById(R.id.comText);
+                    String desc=comment_send.getText().toString().replaceAll(" ","%20");
+                    CustomJsonRequest request = new CustomJsonRequest(URL + "/threads/post_comment.json?thread_id=" + tid + "&description=" + desc, null
+                            , new Response.Listener<String>() {
+                        @Override
+                        //Parse LOGIN
+                        public void onResponse(String response) {
+
+                            try {
+                                JSONObject response1 = new JSONObject(response);
+                                boolean success = response1.getBoolean("success");
+                                if (success) {
+                                    Toast.makeText(getApplicationContext(),"Comment successfully posted", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getApplicationContext(), ThreadActivity.class);
+                                    startActivity(intent);
+                                }
+                                else
+                                {
+                                    Toast.makeText(getApplicationContext(),"Comment failed to post", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                Toast.makeText(getApplicationContext(), "test2 " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                            , new Response.ErrorListener() {
+                        @Override
+                        //Handle Errors
+                        public void onErrorResponse(VolleyError volleyError) {
+                            Toast.makeText(getApplicationContext(), volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    final MoodleAppApplication moodleAppApplication = (MoodleAppApplication) getApplicationContext();
+                    RequestQueue mqueue = moodleAppApplication.getmRequestQueue();
+                    mqueue.add(request);
+                } catch (Exception e) {
+
+                }
+            }
+        });
+        layout.addView(sendButton);
 
     }
 }
