@@ -30,6 +30,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         //obtaining the correct IP for url
         final MoodleAppApplication moodleAppApplication = (MoodleAppApplication) context.getApplicationContext();
         RequestQueue mqueue = moodleAppApplication.getmRequestQueue();
+
         final WifiManager manager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
         final DhcpInfo dhcp = manager.getDhcpInfo();
         final String gateway = LoginActivity.intToIp(dhcp.gateway);
@@ -41,19 +42,33 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (isConnected) {
             //Checking for notifications
-            JsonObjectRequest request = new JsonObjectRequest(URL + "/default/notifications.json", null
-                    , new Response.Listener<JSONObject>() {
+            CustomJsonRequest request = new CustomJsonRequest(URL + "/default/notifications.json", null
+                    , new Response.Listener<String>() {
                 @Override
                 //Parse LOGIN
-                public void onResponse(JSONObject response) {
+                public void onResponse(String response1) {
                     try {
+                        JSONObject response=new JSONObject(response1);
                         JSONArray notif = response.getJSONArray("notifications");
                         for (int j = 0; j < notif.length(); j++) {
-                            if (!(notif.getJSONObject(j).getBoolean("is_seen"))) {
+
+                            if (notif.getJSONObject(j).getInt("is_seen")==0) {
                                 //if a particular notification is unseen, display it
                                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-                                String description = notif.getJSONObject(j).getString("description");
-                                mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+                                String desc = notif.getJSONObject(j).getString("description");
+                                String description="";
+                                boolean flag=true;
+                                for(int i=0;i<desc.length();i++)
+                                {
+                                    char ch=desc.charAt(i);
+                                    if(ch=='<')
+                                        flag=false;
+                                    else if(ch=='>')
+                                        flag=true;
+                                    else if(flag)
+                                        description=description+ch;
+                                }
+                                mBuilder.setSmallIcon(R.drawable.icon);
                                 mBuilder.setContentTitle("New notification");
                                 mBuilder.setContentText(description);
 
@@ -73,7 +88,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                         }
                     } catch (JSONException e) {
-                        Toast.makeText(context.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context.getApplicationContext(), e.getMessage()+"*", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -81,7 +96,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 @Override
                 //Handle Errors
                 public void onErrorResponse(VolleyError volleyError) {
-                    Toast.makeText(context.getApplicationContext(), gateway + volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), gateway + volleyError.getMessage()+"/", Toast.LENGTH_SHORT).show();
 
                 }
             });
