@@ -1,13 +1,26 @@
 package com.sahil.moodleapp;
 
+import android.content.Intent;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.TypedValue;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ThreadActivity extends AppCompatActivity {
 
@@ -40,11 +53,11 @@ public class ThreadActivity extends AppCompatActivity {
         // set the text
         t1.setText(title);
         //set text color
-        int color = ContextCompat.getColor(getApplicationContext(), R.color.textColor);
+        final int color = ContextCompat.getColor(getApplicationContext(), R.color.textColor);
 
         t1.setTextColor(color);
         t1.setId(R.id.thread_title);
-        t1.setTextSize(TypedValue.COMPLEX_UNIT_PT,12);
+        t1.setTextSize(TypedValue.COMPLEX_UNIT_PT,14);
         RelativeLayout.LayoutParams lay= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         lay.addRule(RelativeLayout.BELOW,R.id.thread_activity_head);
         t1.setLayoutParams(lay);
@@ -57,7 +70,7 @@ public class ThreadActivity extends AppCompatActivity {
         //set text color
         t2.setTextColor(color);
         t2.setId(R.id.thread_description);
-        t2.setTextSize(TypedValue.COMPLEX_UNIT_PT,10);
+        t2.setTextSize(TypedValue.COMPLEX_UNIT_PT,12);
         RelativeLayout.LayoutParams lay1= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         lay1.addRule(RelativeLayout.BELOW,R.id.thread_title);
         t2.setLayoutParams(lay1);
@@ -91,17 +104,64 @@ public class ThreadActivity extends AppCompatActivity {
 
         TextView t5 = new TextView(getApplicationContext());
         // set the text
-        t5.setText("Created by id: "+userid);
+        t5.setText("Created by id: " + userid);
         //set text color
         t5.setTextColor(color);
         t5.setId(R.id.thread_by);
-        t5.setTextSize(TypedValue.COMPLEX_UNIT_PT,6);
+        t5.setTextSize(TypedValue.COMPLEX_UNIT_PT, 6);
         RelativeLayout.LayoutParams lay4= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         lay4.addRule(RelativeLayout.BELOW,R.id.thread_updated);
         t5.setLayoutParams(lay4);
         layout.addView(t5);
 
 
+        CustomJsonRequest request = new CustomJsonRequest(URL+"/threads/thread.json/"+tid,null
+                ,new Response.Listener<String>(){
+            @Override
+            //Parse LOGIN
+            public void onResponse(String response){
+
+                try {
+                    JSONObject response1 = new JSONObject(response);
+                    JSONArray comments=response1.getJSONArray("comments");
+                    JSONArray commentUsers=response1.getJSONArray("comment_users");
+                    for(int i=0;i<comments.length();i++){
+
+                        RelativeLayout layout = (RelativeLayout) findViewById(R.id.thread_layout);
+                        final String commentUser=commentUsers.getJSONObject(i).getString("first_name")+" "+commentUsers.getJSONObject(i).getString("last_name");
+                        final String comment=comments.getJSONObject(i).getString("description");
+                        String display="<b>"+commentUser+"</b> :"+comment;
+                        TextView txt=new TextView(getApplicationContext());
+                        txt.setText(Html.fromHtml(display));
+                        txt.setTextColor(color);
+                        txt.setId(i);
+                        txt.setTextSize(TypedValue.COMPLEX_UNIT_PT, 9);
+                        RelativeLayout.LayoutParams lay= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        if(i==0)
+                        lay.addRule(RelativeLayout.BELOW, R.id.thread_by);
+                        else
+                            lay.addRule(RelativeLayout.BELOW, i-1);
+                        txt.setLayoutParams(lay);
+                        layout.addView(txt);
+
+                    }
+                }
+                catch(JSONException e){
+                    Toast.makeText(getApplicationContext(), "test2 " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+                ,new Response.ErrorListener() {
+            @Override
+            //Handle Errors
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(getApplicationContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        request.setTag("gradeRequest");
+        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
+        RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
+        mqueue.add(request);
 
 
     }

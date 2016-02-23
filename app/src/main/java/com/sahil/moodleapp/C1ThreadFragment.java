@@ -93,7 +93,8 @@ public class C1ThreadFragment extends Fragment {
                                 }
                             }
                         });
-                        layout.addView(btnTag);}
+                        layout.addView(btnTag);
+                    }
                 }
                 catch(JSONException e){
                     Toast.makeText(getContext(), "test2 " + e.getMessage(), Toast.LENGTH_SHORT).show();
