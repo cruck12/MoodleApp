@@ -202,7 +202,7 @@ public class ThreadActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(),"Comment failed to post", Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
-                                Toast.makeText(getApplicationContext(), "test2 " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

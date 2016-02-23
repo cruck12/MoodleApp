@@ -8,12 +8,50 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.sahil.moodleapp.C1$PlaceholderFragment"
     android:background="#f2f0ad"
-    android:id="@+id/c1_thread_layout"
+    android:id="@+id/c1_thread_layout_outer"
     >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/c1_thread_layout">
 
     <TextView
         android:id="@+id/threads_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/c1_thread_layout"
+        android:text="Create a new Thread"
+        android:layout_marginTop="20pt"
+        android:textSize="10pt"
+        android:id="@+id/thread_subtitle"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/thread_subtitle"
+        android:hint="Title"
+        android:id="@+id/title_thread"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_thread"
+        android:hint="Description"
+        android:id="@+id/desc_thread" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SUBMIT"
+        android:id="@+id/button_thread"
+        android:layout_below="@+id/desc_thread"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
 </RelativeLayout>

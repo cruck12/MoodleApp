@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -40,9 +41,62 @@ public class C1ThreadFragment extends Fragment {
 
         courseCode=getActivity().getIntent().getExtras().getString("courseCode");
 
-        View rootView = inflater.inflate(R.layout.fragment_c1_thread, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_c1_thread, container, false);
 
         showThreads();
+
+        Button sendButton=(Button)rootView.findViewById(R.id.button_thread);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    EditText threadTitle=(EditText) rootView.findViewById(R.id.title_thread);
+                    EditText threadDesc=(EditText) rootView.findViewById(R.id.desc_thread);
+                    String title=threadTitle.getText().toString().replaceAll(" ","%20");
+                    String desc=threadDesc.getText().toString().replaceAll(" ","%20");
+
+                    CustomJsonRequest request = new CustomJsonRequest(URL+"/threads/new.json?title="+title+"&description="+desc+"&course_code="+courseCode,null
+                            ,new Response.Listener<String>(){
+                        @Override
+                        //Parse LOGIN
+                        public void onResponse(String response){
+
+                            try {
+                                JSONObject response1 = new JSONObject(response);
+                                boolean success=response1.getBoolean("success");
+                                if(success)
+                                {
+                                    Toast.makeText(getActivity().getApplicationContext(),"Thread successfully posted", Toast.LENGTH_SHORT).show();
+                                    Intent intent = getActivity().getIntent();
+                                    getActivity().finish();
+                                    startActivity(intent);
+                                }
+                                else
+                                {
+                                    Toast.makeText(getActivity().getApplicationContext(),"Thread failed to post", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            catch(JSONException e){
+                                Toast.makeText(getContext(), "test2 " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                            ,new Response.ErrorListener() {
+                        @Override
+                        //Handle Errors
+                        public void onErrorResponse(VolleyError volleyError) {
+                            Toast.makeText(getContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getActivity().getApplicationContext();
+                    RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
+                    mqueue.add(request);
+
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return rootView;
     }
