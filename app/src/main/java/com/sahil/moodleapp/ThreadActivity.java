@@ -193,7 +193,8 @@ public class ThreadActivity extends AppCompatActivity {
                                 boolean success = response1.getBoolean("success");
                                 if (success) {
                                     Toast.makeText(getApplicationContext(),"Comment successfully posted", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), ThreadActivity.class);
+                                    Intent intent = getIntent();
+                                    finish();
                                     startActivity(intent);
                                 }
                                 else
