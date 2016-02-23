@@ -4,13 +4,20 @@
     android:layout_height="match_parent"
     tools:context="com.sahil.moodleapp.Notifications_Fragment"
     android:background="#f2f0ad"
-
     >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/notifs_rel_layout">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/notifs_label"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Notifications" />
+
+    </RelativeLayout>
 
 </FrameLayout>

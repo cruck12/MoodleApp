@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.DhcpInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_notifications) {
             fragment = new Notifications_Fragment();
             fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
+            showNotifications();
         } else if (id == R.id.nav_profile) {
             fragment = new Profile_Fragment();
             fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
@@ -174,6 +176,76 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showNotifications()
+    {
+        CustomJsonRequest request = new CustomJsonRequest(URL+"/default/notifications.json",null
+                ,new Response.Listener<String>(){
+            @Override
+            //Parse LOGIN
+            public void onResponse(String response1){
+                RelativeLayout layout = (RelativeLayout) findViewById(R.id.notifs_rel_layout);
+                try {
+                    JSONObject response = new JSONObject(response1);
+                    JSONArray notifications = response.getJSONArray("notifications");
+                    for(int i=0;i<notifications.length();i++){
+                        final JSONObject notification = notifications.getJSONObject(i);
+                        String htmlDesc = notification.getString("description");
+                        //the layout on which you are working
+
+                        //set the properties for button
+                        Button btnTag = new Button(getApplicationContext());
+                        btnTag.setId(i + 1);
+                        RelativeLayout.LayoutParams lay= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        if(i!=0){
+                            lay.addRule(RelativeLayout.BELOW,i);
+                        }
+                        else{
+                            lay.addRule(RelativeLayout.BELOW,R.id.notifs_label);
+                        }
+                        btnTag.setLayoutParams(lay);
+
+                        //extracting the text from the complex description given
+                        String desc="";
+                        boolean flag=true;
+
+                        for(int j=0;j<htmlDesc.length();j++)
+                        {
+                            char ch=htmlDesc.charAt(j);
+                            if(ch=='<')
+                                flag=false;
+                            else if(ch=='>')
+                                flag=true;
+                            else if(flag)
+                                desc=desc+ch;
+                        }
+                        btnTag.setText(desc);
+                        /*btnTag.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        });*/
+                        layout.addView(btnTag);
+                    }
+                }
+                catch(JSONException e){
+                    Toast.makeText(getApplicationContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+                ,new Response.ErrorListener() {
+            @Override
+            //Handle Errors
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(getApplicationContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        //request.setTag("notifsRequest");
+        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
+        RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
+        mqueue.add(request);
     }
 
     private void showAssignments() {
