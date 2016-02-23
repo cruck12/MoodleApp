@@ -14,18 +14,6 @@
     tools:showIn="@layout/activity_login"
     android:background="#f2f0ad">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Moodle App"
-        android:textSize="20sp"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/button_login"
-        android:layout_alignEnd="@+id/button_login"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="46dp" />
-
-
     <EditText
         android:id="@+id/editText_Username"
         android:layout_width="wrap_content"
@@ -61,6 +49,13 @@
         android:layout_centerVertical="true"
         android:background="#a3551d" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:background="@drawable/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

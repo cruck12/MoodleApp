@@ -3,14 +3,26 @@ package com.sahil.moodleapp;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.DhcpInfo;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -30,7 +42,7 @@ public class Courses_Fragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    String URL;
     private OnFragmentInteractionListener mListener;
 
     public Courses_Fragment() {
@@ -63,6 +75,11 @@ public class Courses_Fragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        final WifiManager manager = (WifiManager) super.getActivity().getSystemService(getActivity().WIFI_SERVICE);
+        final DhcpInfo dhcp = manager.getDhcpInfo();
+        String gateway = LoginActivity.intToIp(dhcp.gateway);
+        URL = "http://"+gateway +":8000";
+
     }
 
     @Override
@@ -73,7 +90,7 @@ public class Courses_Fragment extends Fragment {
                 container, false);
 
         // after you've done all your manipulation, return your layout to be shown
-
+        showCourses();
         return frameLayout;
     }
 
@@ -95,6 +112,76 @@ public class Courses_Fragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void showCourses() {
+        CustomJsonRequest request = new CustomJsonRequest(URL+"/courses/list.json",null
+                ,new Response.Listener<String>(){
+            @Override
+            //Parse LOGIN
+            public void onResponse(String response1){
+                RelativeLayout layout = (RelativeLayout) getActivity().findViewById(R.id.course_rel_layout);
+                try {
+                    JSONObject response = new JSONObject(response1);
+                    JSONArray courses = response.getJSONArray("courses");
+                    for(int i=0;i<courses.length();i++){
+                        final JSONObject course = courses.getJSONObject(i);
+                        String code = course.getString("code");
+                        //the layout on which you are working
+
+                        //set the properties for button
+                        Button btnTag = new Button(getContext());
+                        btnTag.setId(i+1);
+                        RelativeLayout.LayoutParams lay= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        if(i!=0){
+                            lay.addRule(RelativeLayout.BELOW,i);
+                        }
+                        else{
+                            lay.addRule(RelativeLayout.BELOW,R.id.courses_label);
+                        }
+                        btnTag.setLayoutParams(lay);
+                        btnTag.setText(code);
+
+                        btnTag.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent intent = new Intent(getContext(), C1.class);
+                                    intent.putExtra("courseCode", course.getString("code"));
+                                    intent.putExtra("courseName", course.getString("name"));
+                                    intent.putExtra("courseDescription", course.getString("description"));
+                                    intent.putExtra("courseCredits", course.getInt("credits"));
+                                    intent.putExtra("courseId", course.getInt("id"));
+                                    intent.putExtra("courseLtp", course.getString("l_t_p"));
+
+                                    startActivity(intent);
+                                }
+                                catch (JSONException e){
+
+                                }
+                            }
+                        });
+                        //add button to the layout
+                        layout.addView(btnTag);
+                    }
+                }
+                catch(JSONException e){
+
+                }
+            }
+        }
+                ,new Response.ErrorListener() {
+            @Override
+            //Handle Errors
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(getContext(), volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        request.setTag("courseRequest");
+        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getActivity().getApplicationContext();
+        RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
+        mqueue.add(request);
     }
 
     /**
