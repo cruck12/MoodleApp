@@ -5,5 +5,10 @@
     <item name="assignment_description" type="id"/>
     <item name="created" type="id"/>
     <item name="deadline" type="id"/>
+    <item name="thread_title" type="id"/>
+    <item name="thread_description" type="id"/>
+    <item name="thread_created" type="id"/>
+    <item name="thread_updated" type="id"/>
+    <item name="thread_by" type="id"/>
 
 </resources>
