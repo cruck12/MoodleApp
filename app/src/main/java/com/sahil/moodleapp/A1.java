@@ -22,6 +22,8 @@ public class A1 extends AppCompatActivity {
         courseid=getIntent().getExtras().getInt("courseid");
         assignid=getIntent().getExtras().getInt("assignid");
 
+        setTitle(assignName.substring(0,21));
+
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.assignment_activity);
 
         // create a new TextView for showing xml data

@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        setTitle(R.string.app_name);
 
         // The first option of the navigation drawer is highlighted and the fragment is displayed.
         if(savedInstanceState==null) {
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         } else if (backExit) {
             super.onBackPressed();
         } else {
-            Toast.makeText(this, "Press Back again to Exit.",
+/*            Toast.makeText(this, "Press Back again to Exit.",
                     Toast.LENGTH_SHORT).show();
             backExit = true;
             new Handler().postDelayed(new Runnable() {
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity
                     backExit = false;
                 }
             }, 3 * 1000);
-        }
+*/        }
     }
 
     @Override

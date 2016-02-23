@@ -130,7 +130,7 @@ public class Courses_Fragment extends Fragment {
                         //the layout on which you are working
 
                         //set the properties for button
-                        Button btnTag = new Button(getContext());
+                        Button btnTag = new Button(getActivity().getApplicationContext());
                         btnTag.setId(i+1);
                         RelativeLayout.LayoutParams lay= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         if(i!=0){
