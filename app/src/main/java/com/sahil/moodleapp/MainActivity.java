@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if(getFragmentManager().getBackStackEntryCount()>0) {
             getFragmentManager().popBackStack();
-        } else if (backExit) {
+        } else if (true) {
             super.onBackPressed();
         } else {
 /*            Toast.makeText(this, "Press Back again to Exit.",
