@@ -76,10 +76,17 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         // The first option of the navigation drawer is highlighted and the fragment is displayed.
         if(savedInstanceState==null) {
             navigationView.getMenu().getItem(0).setChecked(true);
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
+            View header = navigationView.getHeaderView(0);
+            TextView name = (TextView) header.findViewById(R.id.textView_ProfileName);
+            TextView email = (TextView) header.findViewById(R.id.textView_ProfileEmail);
+            SharedPreferences settings = getApplication().getSharedPreferences("profileData", MODE_PRIVATE);
+            name.setText(settings.getString("firstName",""));
+            email.setText(settings.getString("email",""));
         }
         else{
         }
