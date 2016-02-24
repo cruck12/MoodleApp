@@ -3,6 +3,7 @@ package com.sahil.moodleapp;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.TypedValue;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,7 +45,7 @@ public class A1 extends AppCompatActivity {
         // create a new TextView for showing xml data
         TextView t2 = new TextView(getApplicationContext());
         // set the text
-        t2.setText(assignDesc);
+        t2.setText(Html.fromHtml(assignDesc));
         //set text color
         t2.setTextColor(color);
         t2.setId(R.id.assignment_description);
