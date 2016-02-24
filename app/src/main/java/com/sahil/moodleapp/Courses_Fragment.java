@@ -178,7 +178,7 @@ public class Courses_Fragment extends Fragment {
 
             }
         });
-        request.setTag("courseRequest");
+        request.setTag("");
         final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getActivity().getApplicationContext();
         RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
         mqueue.add(request);

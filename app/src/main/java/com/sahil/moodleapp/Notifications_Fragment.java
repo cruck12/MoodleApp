@@ -87,9 +87,11 @@ public class Notifications_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView=inflater.inflate(R.layout.fragment_notifications_, container, false);
+        final FrameLayout frameLayout = (FrameLayout) inflater.inflate(R.layout.fragment_notifications_,
+                container, false);
+
         showNotifications();
-        return rootView;
+        return frameLayout;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -116,8 +118,7 @@ public class Notifications_Fragment extends Fragment {
         mListener = null;
     }
 
-    private void showNotifications()
-    {
+    private void showNotifications() {
         CustomJsonRequest request = new CustomJsonRequest(URL+"/default/notifications.json",null
                 ,new Response.Listener<String>(){
             @Override
@@ -130,21 +131,8 @@ public class Notifications_Fragment extends Fragment {
                     for(int i=0;i<notifications.length();i++){
                         final JSONObject notification = notifications.getJSONObject(i);
                         String code = notification.getString("description");
-                        //the layout on which you are working
-
-                        //set the properties for button
-                        Button btnTag = new Button(getActivity().getApplicationContext());
-                        btnTag.setId(i+1);
-                        RelativeLayout.LayoutParams lay= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        if(i!=0){
-                            lay.addRule(RelativeLayout.BELOW,i);
-                        }
-                        else{
-                            lay.addRule(RelativeLayout.BELOW,R.id.notifs_label);
-                        }
-                        btnTag.setLayoutParams(lay);
-
                         String desc="";
+                        //build string for description
                         boolean flag=true;
                         for(int j=0;j<code.length();j++)
                         {
@@ -156,31 +144,34 @@ public class Notifications_Fragment extends Fragment {
                             else if(flag)
                                 desc=desc+ch;
                         }
+                        //set the properties for button
+                        Button btnTag = new Button(getActivity().getApplicationContext());
+                        btnTag.setId(i+1);
+                        RelativeLayout.LayoutParams lay= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        if(i!=0){
+                            lay.addRule(RelativeLayout.BELOW,i);
+                        }
+                        else{
+                            lay.addRule(RelativeLayout.BELOW,R.id.notifs_label);
+                        }
+                        btnTag.setLayoutParams(lay);
                         btnTag.setText(desc);
-
-                        Toast.makeText(getContext(),desc, Toast.LENGTH_SHORT).show();
 
                         btnTag.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                /*try {
-                                    Intent intent = new Intent(getContext(), C1.class);
-                                    intent.putExtra("courseCode", course.getString("code"));
-                                    intent.putExtra("courseName", course.getString("name"));
-                                    intent.putExtra("courseDescription", course.getString("description"));
-                                    intent.putExtra("courseCredits", course.getInt("credits"));
-                                    intent.putExtra("courseId", course.getInt("id"));
-                                    intent.putExtra("courseLtp", course.getString("l_t_p"));
-
-                                    startActivity(intent);
+                                try {
+                                    Toast.makeText(getContext(),"test", Toast.LENGTH_SHORT).show();
                                 }
-                                catch (JSONException e){
+                                catch (Exception e){
 
-                                }*/
+                                }
                             }
                         });
                         //add button to the layout
                         layout.addView(btnTag);
+
+                        Toast.makeText(getContext(),desc, Toast.LENGTH_SHORT).show();
                     }
                 }
                 catch(JSONException e){
@@ -196,6 +187,7 @@ public class Notifications_Fragment extends Fragment {
 
             }
         });
+        request.setTag("");
         final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getActivity().getApplicationContext();
         RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
         mqueue.add(request);

@@ -23,7 +23,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"/>
 
     <EditText
         android:id="@+id/editText_Password"
@@ -37,7 +37,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_above="@+id/button_login"
-        />
+        android:drawableLeft="@android:drawable/ic_secure"
+        android:drawablePadding="2dp"/>
 
     <Button
         android:id="@+id/button_login"

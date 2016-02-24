@@ -139,6 +139,7 @@ public class Assignments_Fragment extends Fragment {
                 Toast.makeText(getContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        request1.setTag("");
         mqueue.add(request1);
     }
 
@@ -201,6 +202,7 @@ public class Assignments_Fragment extends Fragment {
                 Toast.makeText(getContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        request.setTag("");
         final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getActivity().getApplicationContext();
         RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
         mqueue.add(request);

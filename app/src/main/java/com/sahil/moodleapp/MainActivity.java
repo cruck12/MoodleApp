@@ -1,6 +1,7 @@
 package com.sahil.moodleapp;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
@@ -98,6 +99,9 @@ public class MainActivity extends AppCompatActivity
     private Boolean backExit = false;
     @Override
     public void onBackPressed() {
+        final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getApplicationContext();
+        RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
+        mqueue.cancelAll("");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -157,9 +161,6 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
         } else if (id == R.id.nav_assignments) {
             fragment = new Assignments_Fragment();
-            fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
-        } else if (id == R.id.nav_notifications) {
-            fragment = new Notifications_Fragment();
             fragmentManager.beginTransaction().replace(R.id.Starting_Frame, fragment).addToBackStack(BackStack).commit();
         } else if (id == R.id.nav_profile) {
             fragment = new Profile_Fragment();

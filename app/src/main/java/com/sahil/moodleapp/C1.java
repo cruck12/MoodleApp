@@ -162,13 +162,13 @@ public class C1 extends AppCompatActivity {
             switch (position){
                 case 0:
                     //page 1
-                    return new C1GradeFragment();
+                    return new C1ThreadFragment();
                 case 1:
-                    //page 2
+                //page 2
                     return new C1AssignmentFragment();
                 case 2:
-                    //page 3
-                    return new C1ThreadFragment();
+                //page 3
+                    return new C1GradeFragment();
                 default:
                     //this page does not exists
                     return null;
@@ -185,11 +185,11 @@ public class C1 extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Grades";
+                    return "Threads";
                 case 1:
                     return "Assignments";
                 case 2:
-                    return "Threads";
+                    return "Grades";
             }
             return null;
         }

@@ -195,7 +195,7 @@ public class Grades_Fragment extends Fragment {
                 Toast.makeText(getContext(),volleyError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        request.setTag("gradeRequest");
+        request.setTag("");
         final MoodleAppApplication moodleAppApplication=(MoodleAppApplication) getActivity().getApplicationContext();
         RequestQueue mqueue= moodleAppApplication.getmRequestQueue();
         mqueue.add(request);

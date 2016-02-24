@@ -18,6 +18,7 @@ import android.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
             //initialize request queue
             mqueue = moodleAppApplication.getmRequestQueue();
+
 //        mqueue=Volley.newRequestQueue(getApplicationContext());
         }
 
@@ -231,5 +233,7 @@ public class LoginActivity extends AppCompatActivity {
             return builder.create();
         }
     }
+
+
 
 }
